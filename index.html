@@ -263,53 +263,68 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Firecracker styles */
-        .firecracker {
-            position: absolute;
-            width: 20px;
-            height: 60px;
-            background: linear-gradient(to bottom, #c62828 0%, #e53935 50%, #ff5252 100%);
-            border-radius: 5px;
-            z-index: 10;
-            box-shadow: 0 0 10px rgba(255, 82, 82, 0.7);
-            animation: firecrackerFlicker 0.5s infinite alternate;
-        }
-
-        .firecracker::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: 5px;
-            width: 10px;
-            height: 15px;
-            background: #ffeb3b;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .firecracker::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
+        /* Share options modal */
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: #212121;
-            border-radius: 0 0 5px 5px;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
         }
-
-        @keyframes firecrackerFlicker {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
+        
+        .share-options {
+            background: rgba(25, 25, 45, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+            border: 1px solid rgba(255,215,0,0.5);
         }
-
-        .spark {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #ffeb3b;
-            box-shadow: 0 0 5px 2px #ffeb3b;
-            z-index: 10;
+        
+        .share-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .share-option:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .share-option img {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+        }
+        
+        .share-option span {
+            font-size: 1.1em;
+            color: white;
+        }
+        
+        .close-share {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        
+        .close-share button {
+            background: none;
+            border: none;
+            color: #FFD700;
+            font-size: 1.2em;
+            cursor: pointer;
         }
 
         @media (max-width: 500px) {
@@ -326,25 +341,24 @@
 </head>
 <body>
     <script type="text/javascript">
-            atOptions = {
-                'key' : 'a456cba9ec27a23c96a20c8e373bdd24',
-                'format' : 'iframe',
-                'height' : 60,
-                'width' : 468,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/a456cba9ec27a23c96a20c8e373bdd24/invoke.js"></script>
-        
+	atOptions = {
+		'key' : 'a456cba9ec27a23c96a20c8e373bdd24',
+		'format' : 'iframe',
+		'height' : 60,
+		'width' : 468,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/a456cba9ec27a23c96a20c8e373bdd24/invoke.js"></script>
     <canvas id="fireworksCanvas"></canvas>
-    <!-- Firecracker elements will be added here by JavaScript -->
+    
     <div class="container">
         <img id="laxmiGif" src="laxmi.gif" alt="लक्ष्मी जी एनीमेशन">
 
         <div id="greetingContainer">
             <!-- Greeting will be inserted here -->
         </div>
-<div class="input-container" id="nameInputSection">
+        <div class="input-container" id="nameInputSection">
             <p>यह दिवाली शुभकामना अपने नाम से भेजने के लिए, अपना नाम लिखें:</p>
             <input type="text" id="nameInput" placeholder="आपका नाम यहाँ लिखें">
             <button id="generateLinkButton">
@@ -360,14 +374,30 @@
             </div>
         </div>
     </div>
+    
+    <!-- Share Options Modal -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-options">
+            <div class="close-share">
+                <button id="closeShareModal">&times;</button>
+            </div>
+            <div class="share-option" id="whatsappShare">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                <span>WhatsApp पर शेयर करें</span>
+            </div>
+            <div class="share-option" id="otherShare">
+                <img src="https://cdn-icons-png.flaticon.com/512/159/159069.png" alt="Other">
+                <span>अन्य ऐप्स पर शेयर करें</span>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Enhanced Fireworks Script
+        // Enhanced Fireworks Script (without firecrackers)
         const fireworksCanvas = document.getElementById('fireworksCanvas');
         const ctx = fireworksCanvas.getContext('2d');
         let fireworks = [];
         let particles = [];
-        let firecrackers = [];
         let sparks = [];
 
         function setupCanvas() {
@@ -402,7 +432,6 @@
                 
                 if (Math.sqrt((this.targetX - this.x)**2 + (this.targetY - this.y)**2) < this.speed * 1.5) {
                     createParticles(this.targetX, this.targetY, this.color);
-                    createFirecracker(this.targetX, this.targetY);
                     fireworks.splice(index, 1);
                 }
             }
@@ -492,94 +521,6 @@
             }
         }
 
-        class Firecracker {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.width = 20;
-                this.height = 60;
-                this.lifetime = 100;
-                this.currentLife = 0;
-                this.exploded = false;
-                this.sparks = [];
-            }
-            
-            update(index) {
-                this.currentLife++;
-                
-                if (!this.exploded && this.currentLife > 30) {
-                    this.explode();
-                    this.exploded = true;
-                }
-                
-                if (this.exploded) {
-                    for (let i = 0; i < this.sparks.length; i++) {
-                        this.sparks[i].update();
-                        if (this.sparks[i].alpha <= 0) {
-                            this.sparks.splice(i, 1);
-                            i--;
-                        }
-                    }
-                }
-                
-                if (this.currentLife >= this.lifetime) {
-                    firecrackers.splice(index, 1);
-                }
-            }
-            
-            explode() {
-                // Create explosion sparks
-                for (let i = 0; i < 50; i++) {
-                    this.sparks.push(new Spark(
-                        this.x + this.width/2,
-                        this.y,
-                        Math.random() * Math.PI * 2,
-                        Math.random() * 5 + 2,
-                        `hsl(${Math.random() * 60 + 10}, 100%, 50%)`,
-                        1.5 + Math.random()
-                    ));
-                }
-                
-                // Play explosion sound (commented out as it requires user interaction)
-                // const explosionSound = new Audio('explosion.mp3');
-                // explosionSound.volume = 0.2;
-                // explosionSound.play().catch(e => console.log('Audio play failed:', e));
-            }
-            
-            draw() {
-                if (!this.exploded) {
-                    // Draw firecracker body
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    
-                    // Body
-                    ctx.fillStyle = `hsl(${10 + this.currentLife}, 100%, 50%)`;
-                    ctx.fillRect(0, 0, this.width, this.height);
-                           
-                    // Fuse
-                    ctx.fillStyle = '#ffeb3b';
-                    ctx.beginPath();
-                    ctx.arc(this.width/2, -5, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Fuse flame
-                    if (this.currentLife > 15) {
-                        ctx.fillStyle = `hsl(${40 + this.currentLife*2}, 100%, 50%)`;
-                        ctx.beginPath();
-                        ctx.arc(this.width/2, -8 - this.currentLife/5, 2 + this.currentLife/10, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                    
-                    ctx.restore();
-                }
-                
-                // Draw sparks
-                for (const spark of this.sparks) {
-                    spark.draw();
-                }
-            }
-        }
-
         class Spark {
             constructor(x, y, angle, speed, color, size) {
                 this.x = x;
@@ -614,10 +555,6 @@
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle(x, y, color));
             }
-        }
-
-        function createFirecracker(x, y) {
-            firecrackers.push(new Firecracker(x - 10, y - 60));
         }
 
         function createSpark(x, y, color) {
@@ -692,7 +629,6 @@
             clearInterval(fireworksInterval);
             fireworks = [];
             particles = [];
-            firecrackers = [];
             sparks = [];
             
             if (ctx) {
@@ -721,11 +657,6 @@
                 for (let i = 0; i < particles.length; i++) {
                     particles[i].update(i);
                     particles[i].draw();
-                }
-                
-                for (let i = 0; i < firecrackers.length; i++) {
-                    firecrackers[i].update(i);
-                    firecrackers[i].draw();
                 }
                 
                 for (let i = 0; i < sparks.length; i++) {
@@ -779,15 +710,41 @@
             generatedLinkContainer.style.display = 'block';
         }
 
-        document.getElementById('generateLinkButton').addEventListener('click', async function() {
+        // Share functionality with WhatsApp priority
+        document.getElementById('generateLinkButton').addEventListener('click', function() {
             const name = document.getElementById('nameInput').value.trim();
             if (name === "") {
                 alert("कृपया अपना नाम दर्ज करें।");
                 return;
             }
             
-            document.getElementById('generatedLinkContainer').style.display = 'none';
+            const baseUrl = window.location.origin + window.location.pathname;
+            const generatedLink = `${baseUrl}?sender=${encodeURIComponent(name)}`;
+            
+            // Store the generated link for use in share options
+            document.getElementById('generatedLink').textContent = generatedLink;
+            
+            // Show share options modal
+            document.getElementById('shareModal').style.display = 'flex';
+        });
 
+        // WhatsApp share handler
+        document.getElementById('whatsappShare').addEventListener('click', function() {
+            const name = document.getElementById('nameInput').value.trim();
+            const baseUrl = window.location.origin + window.location.pathname;
+            const generatedLink = `${baseUrl}?sender=${encodeURIComponent(name)}`;
+            const senderDisplayName = decodeURIComponent(name);
+            
+            const whatsappMessage = `${senderDisplayName} आपको दीपावली की हार्दिक शुभकामनाएँ भेज रहे हैं! इस विशेष संदेश को देखने के लिए क्लिक करें: ${generatedLink}`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+            
+            window.open(whatsappUrl, '_blank');
+            document.getElementById('shareModal').style.display = 'none';
+        });
+
+        // Other share handler
+        document.getElementById('otherShare').addEventListener('click', async function() {
+            const name = document.getElementById('nameInput').value.trim();
             const baseUrl = window.location.origin + window.location.pathname;
             const generatedLink = `${baseUrl}?sender=${encodeURIComponent(name)}`;
             const senderDisplayName = decodeURIComponent(name);
@@ -811,6 +768,13 @@
                 displayLinkForManualCopy(generatedLink);
                 alert("आपका ब्राउज़र सीधे शेयरिंग का समर्थन नहीं करता है। कृपया लिंक को मैन्युअल रूप से कॉपी करें।");
             }
+            
+            document.getElementById('shareModal').style.display = 'none';
+        });
+
+        // Close modal handler
+        document.getElementById('closeShareModal').addEventListener('click', function() {
+            document.getElementById('shareModal').style.display = 'none';
         });
 
         document.getElementById('copyLinkButton').addEventListener('click', function() {
@@ -824,18 +788,6 @@
 
         window.onload = function() {
             displayGreetingAndFireworks();
-            
-            // Add some random firecrackers at the bottom
-            if (getQueryParam('sender')) {
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => {
-                        createFirecracker(
-                            Math.random() * (window.innerWidth - 40) + 20,
-                            window.innerHeight - 50
-                        );
-                    }, i * 800);
-                }
-            }
         };
     </script>
 </body>
