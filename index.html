@@ -68,7 +68,7 @@
         }
 
         .greeting-message {
-            font-size: 2em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #FFD700;
             margin-bottom: 0px;
@@ -83,7 +83,7 @@
         }
 
         .greeting-message-sender {
-            font-size: 0.3em;
+            font-size: 1.3em;
             color: #FFA500;
             display: block;
             margin-top: 0px;
@@ -396,7 +396,7 @@
             if (senderName) {
                 const decodedSenderName = decodeURIComponent(senderName);
                 greetingContainer.innerHTML = `
-                    <div class="greeting-message">${decodedSenderName} 🙏ସମସ୍ତେ ଆସିଯିବ🙏<span class="greeting-message-sender">ଚନ୍ଦନଯାତ୍ରା(ସୋମବାର)</span></div>
+                    <div class="greeting-message">${decodedSenderName} Has Invited You<span class="greeting-message-sender">ଚନ୍ଦନଯାତ୍ରା(ସୋମବାର)</span></div>
                 `;
                 laxmiGif.classList.add('animated');
             } else {
